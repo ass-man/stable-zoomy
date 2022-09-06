@@ -1,18 +1,16 @@
+# i have no idea what im doings
+
 #%%
 import librosa
 import numpy as np
 import librosa.display
 import matplotlib.pyplot as plt
-y, sr = librosa.load(r"C:\Users\santt\Videos\kemuri.mp3",duration = 30)
+# %%
+y, sr = librosa.load(r"C:\Users\santt\Videos\Kemuri.mp3")
 hop_length = 512
 
 frame_length = 512
-framerate = 24
-
-
-
-
-
+framerate = 15
 # %%
 onset_env = librosa.onset.onset_strength(y=y, sr=sr,
                                          aggregate=np.median)
@@ -76,14 +74,26 @@ def getZoomString(key_frames):
 
     output = ""
     for i,frame in enumerate(getFrames(key_frames)):
-        zs = round(1 +  (0.3 * key_frames[i][2]),2)
-        dzs = round(1 -  (0.1 * key_frames[i][2] / 2),2)
+        zs = round(1 +  (0.2 * key_frames[i][2]),2)
+        dzs = round(1 -  (0.1 * key_frames[i][2] / 3),2)
         output += f"{frame[0]}:({zs}),"
         output += f"{frame[1]}:({dzs}),"
     output = output.strip(',')
     return output
 
-def getLRString(key_frames):
+
+def getZ_translationString(key_frames):
+
+    output = ""
+    for i,frame in enumerate(getFrames(key_frames)):
+        zs = round(3 +  (2 * key_frames[i][2]),2)
+        dzs = round(-1 -  (1 * key_frames[i][2]),2)
+        output += f"{frame[0]}:({zs}),"
+        output += f"{frame[1]}:({dzs}),"
+    output = output.strip(',')
+    return output
+
+def getX_tranlationString(key_frames):
     output = ""
     do_nothing = 0
     x_left = -2
@@ -91,34 +101,38 @@ def getLRString(key_frames):
     for i,frame in enumerate(getFrames(key_frames)):
         output += f"{frame[0]}:({do_nothing}),"
         if(i%2 == 0):
-            val = round(x_right + (x_right * key_frames[i][2]),2)
+            val = round(1 + (x_right * key_frames[i][2]),2)
             output += f"{frame[1]}:({val}),"
         else:
-            val = round(x_left + (x_left * key_frames[i][2]),2)
+            val = round(-1 + (x_left * key_frames[i][2]),2)
             output += f"{frame[1]}:({val}),"
     output = output.strip(',')
     return output
 
-def getUDString(key_frames):
+def getY_tranlationString(key_frames):
     output = ""
     do_nothing = 0
-    x_left = -2
-    x_right = 2
+    z_back = -1
+    z_front = 2
     for i,frame in enumerate(getFrames(key_frames)):
         output += f"{frame[0]}:({do_nothing}),"
         if(i%2 != 0):
-            val = round(x_right + (x_right * key_frames[i][2]),2)
+            val = round(z_front + (z_front * key_frames[i][2]),2)
             output += f"{frame[1]}:({val}),"
         else:
-            val = round(x_left + (x_left * key_frames[i][2]),2)
+            val = round(z_back + (z_back * key_frames[i][2]),2)
             output += f"{frame[1]}:({val}),"
     output = output.strip(',')
     return output
 
 
 print(getZoomString(key_frames),"\n")
-print(getLRString(key_frames),"\n")
-print(getUDString(key_frames),"\n")
+print(getX_tranlationString(key_frames),"\n")
+
+print(getY_tranlationString(key_frames),"\n")
+print(getZ_translationString(key_frames),"\n")
 
 
 
+
+# %%
